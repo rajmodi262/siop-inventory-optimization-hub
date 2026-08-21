@@ -2,12 +2,13 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://python.org)
 [![Power BI](https://img.shields.io/badge/Power_BI-DAX_%26_Modeling-F2C811.svg?logo=powerbi&logoColor=black)](https://powerbi.microsoft.com)
+[![DuckDB](https://img.shields.io/badge/DuckDB-In--Process_Warehouse-FFF000.svg?logo=duckdb&logoColor=black)](https://duckdb.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Star_Schema-336791.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Interactive_App-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io)
-[![Tests](https://img.shields.io/badge/PyTest-Passing-success.svg?logo=pytest&logoColor=white)](https://pytest.org)
+[![Tests](https://img.shields.io/badge/PyTest-7%20Passing-success.svg?logo=pytest&logoColor=white)](https://pytest.org)
 [![Domain](https://img.shields.io/badge/Domain-Supply_Chain_%26_SIOP-green.svg)](https://eaton.com)
 
-> **An enterprise-grade analytical platform and executive decision intelligence engine designed for multi-plant manufacturing networks.** Bridges Sales, Inventory, and Operations Planning (**SIOP**) by calculating dynamic safety stock buffers under stochastic lead-time volatility, monitoring Days of Inventory on Hand (**DOH**), isolating Excess & Obsolete (**E&O**) reserves, and enforcing automated data quality governance before BI ingestion.
+> **An enterprise-grade analytical platform and executive decision intelligence engine designed for multi-plant manufacturing networks.** Bridges Sales, Inventory, and Operations Planning (**SIOP**) by calculating dynamic safety stock buffers under stochastic lead-time volatility, generating **Holt-Winters time-series demand forecasts (WAPE / MAPE)**, monitoring Days of Inventory on Hand (**DOH**), isolating Excess & Obsolete (**E&O**) reserves, and enforcing automated data quality governance before BI ingestion.
 
 ---
 
@@ -19,7 +20,8 @@ In global manufacturing ecosystems (such as **Eaton's Electrical, Aerospace, and
 
 This platform replaces static ERP reorder rules with **statistical distribution modeling** and provides an **interactive Power BI / Streamlit decision suite** that:
 * Calculates **Dynamic Safety Stock** incorporating both **demand volatility ($\sigma_D$)** and **supplier lead-time variance ($\sigma_L$)**.
-* Tracks **Days of Inventory on Hand (DOH)** and **Inventory Turns** across 5 global manufacturing plants.
+* Generates **Holt-Winters Exponential Smoothing demand forecasts** evaluated with **WAPE**, **MAPE**, and **Forecast Bias Tracking Signals**.
+* Tracks **Days of Inventory on Hand (DOH)**, **Inventory Turns**, and **Plant Capacity Loading** across 5 global manufacturing plants.
 * Isolates **Dormant and Excess & Obsolete (E&O) inventory**, unlocking an estimated **14% reduction in non-productive working capital**.
 * Executes **automated ERP data governance & reconciliation assertions** to prevent data discrepancies in downstream dashboards.
 
@@ -42,14 +44,16 @@ flowchart TD
         LOG["Data Health Scorecard\n(PASS / FAIL Logs)"]
     end
 
-    subgraph Analytical_Engine ["3. Core Optimization Engine"]
+    subgraph Analytical_Engine ["3. Core Optimization & Forecasting Engine"]
         OPT["InventoryOptimizer\n• Dynamic Safety Stock (Z-Score)\n• Days of Inventory on Hand (DOH)\n• Economic Order Quantity (EOQ)\n• ABC-XYZ Matrix & E&O Reserves"]
-        STAR["Star Schema Warehouse\n(Fact_InventoryDailySnapshots)"]
+        FC["SIOPDemandForecaster\n• Holt-Winters Exponential Smoothing\n• Forecast Accuracy (WAPE / MAPE)\n• Forecast Bias & Plant Loading"]
+        STAR["Star Schema Warehouse\n(Fact_InventoryDailySnapshots in DuckDB)"]
     end
 
     subgraph Delivery_Layer ["4. Executive BI & Decision Layer"]
         PBI["Power BI Executive Dashboard\n(Custom DAX Measures & Slicers)"]
         APP["Streamlit Scenario Twin\n(Live Lead-Time Shock Simulator)"]
+        EXP["Parquet / CSV Direct Exporter\n(Power BI Dataflow Certified)"]
     end
 
     ERP --> QA
@@ -59,8 +63,11 @@ flowchart TD
     QA --> LOG
     QA --> STAR
     STAR --> OPT
+    STAR --> FC
     OPT --> PBI
     OPT --> APP
+    FC --> APP
+    STAR --> EXP
 ```
 
 ---
@@ -79,10 +86,18 @@ Where:
 * $\bar{D}$: Average daily demand over trailing 90 days.
 * $\sigma_L$: Standard deviation of supplier lead time in days.
 
-### 2. Days of Inventory on Hand ($DOH$)
+### 2. Weighted Absolute Percentage Error (WAPE)
+$$\text{WAPE} = \frac{\sum_{t=1}^{T} |A_t - F_t|}{\sum_{t=1}^{T} A_t} \times 100$$
+
+### 3. Forecast Tracking Signal & Bias
+$$\text{Bias \%} = \frac{\sum_{t=1}^{T} (F_t - A_t)}{\sum_{t=1}^{T} A_t} \times 100$$
+* **Positive Bias ($> +5\%$)**: Over-forecasting (Excess inventory holding risk).
+* **Negative Bias ($< -5\%$)**: Under-forecasting (Stockout & backorder risk).
+
+### 4. Days of Inventory on Hand ($DOH$)
 $$\text{DOH} = \frac{\text{On-Hand Inventory Quantity}}{\text{Average Daily Demand (trailing 90-day window)}}$$
 
-### 3. Economic Order Quantity ($EOQ$)
+### 5. Economic Order Quantity ($EOQ$)
 $$EOQ = \sqrt{\frac{2 \cdot \text{Annual Demand} \cdot \text{Order Cost}}{\text{Unit Cost} \cdot \text{Holding Rate (\%)}}}$$
 
 ---
@@ -162,11 +177,12 @@ erDiagram
 
 1. **Executive SIOP Scorecard**: Instant macro-level tracking of total capitalized inventory, median DOH by plant, and total working capital.
 2. **Dynamic Lead-Time Shock Simulator**: Planners can adjust supplier lead-time multipliers ($0.5\times$ to $2.5\times$) and service level sliders ($85\%\text{--}99.9\%$) to calculate exact required capital adjustments in real time.
-3. **Dual ABC/XYZ Matrix Segmentation**:
+3. **SIOP Demand Forecasting & Plant Loading**: Generates forward 30-day demand curves with Holt-Winters Exponential Smoothing, computing WAPE, MAPE, and plant bottleneck risk.
+4. **Dual ABC/XYZ Matrix Segmentation**:
    * **ABC (Cost Contribution)**: Top 80% capital value items categorized for strict inventory control.
    * **XYZ (Demand Predictability)**: Segregates constant (X), fluctuating (Y), and erratic/lumpy (Z) demand patterns.
-4. **Excess & Obsolete (E&O) Engine**: Automatically isolates dormant capital (no movement $>90$ days) to facilitate surplus redistribution or scrap write-downs.
-5. **Data Quality Governance Suite**: Executes 40+ automated SQL/Python integrity checks verifying referential integrity, positive inventory rules, and financial consistency.
+5. **Excess & Obsolete (E&O) Engine**: Automatically isolates dormant capital (no movement $>90$ days) to facilitate surplus redistribution or scrap write-downs.
+6. **Data Quality Governance Suite**: Executes 40+ automated SQL/Python integrity checks verifying referential integrity, positive inventory rules, and financial consistency.
 
 ---
 
@@ -186,9 +202,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Generate Synthetic ERP Dataset
+### 2. Run Automated ETL Pipeline & Warehouse Ingestion
 ```bash
-python src/data_generator.py
+python src/etl_pipeline.py
 ```
 
 ### 3. Launch Interactive Streamlit Dashboard
@@ -196,7 +212,7 @@ python src/data_generator.py
 streamlit run app.py
 ```
 
-### 4. Run Automated Test Suite
+### 4. Run Automated PyTest Suite
 ```bash
 pytest tests/ -v
 ```
