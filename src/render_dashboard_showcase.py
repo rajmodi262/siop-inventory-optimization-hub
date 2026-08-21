@@ -33,9 +33,9 @@ def render_executive_dashboard():
     ax_head.axis('off')
     rect = patches.FancyBboxPatch((0, 0), 1, 1, boxstyle="round,pad=0.02", fc="#111827", ec="#1e293b", lw=1.5, transform=ax_head.transAxes)
     ax_head.add_patch(rect)
-    ax_head.text(0.02, 0.55, "EATON GLOBAL SCM EXECUTIVE COMMAND CENTER", fontsize=16, fontweight='bold', color='#38bdf8', va='center')
-    ax_head.text(0.02, 0.22, "Multi-Plant SIOP Intelligence | Plant Capacity Loading | Safety Stock Buffer Health | E&O Reserves", fontsize=9, color='#94a3b8', va='center')
-    ax_head.text(0.98, 0.50, "REFRESHED: LIVE (DIRECT LAKE) | FY26-Q1", fontsize=9, fontweight='bold', color='#10b981', ha='right', va='center')
+    ax_head.text(0.02, 0.55, "GLOBAL SCM EXECUTIVE COMMAND CENTER", fontsize=16, fontweight='bold', color='#38bdf8', va='center')
+    ax_head.text(0.02, 0.22, "DESIGN MOCKUP (matplotlib) — not a Power BI screen capture · Simulated data · Target layout for the Power BI build", fontsize=9, color='#94a3b8', va='center')
+    ax_head.text(0.98, 0.50, "STATIC MOCKUP · NOT A LIVE CONNECTION", fontsize=9, fontweight='bold', color='#10b981', ha='right', va='center')
     
     # 4 KPI Hero Cards
     total_val = df_snapshots[df_snapshots["date_key"]==df_snapshots["date_key"].max()]["total_inventory_value"].sum()
@@ -97,7 +97,7 @@ def render_executive_dashboard():
         at.set_fontweight('bold')
     ax_pie.set_title("Inventory Allocation by Product Category", fontsize=11, fontweight='bold', color='#f8fafc', pad=12, loc='left')
 
-    out_p1 = "powerbi/screenshots/page1_executive_command_center.png"
+    out_p1 = "powerbi/mockups/page1_executive_command_center.png"
     plt.savefig(out_p1, facecolor=fig.get_facecolor(), bbox_inches='tight')
     plt.close()
     print(f"  [OK] Rendered Masterclass Page 1 Mockup: {out_p1}")
@@ -163,7 +163,7 @@ def render_executive_dashboard():
         ax_side.text(0.08, y_pos - 0.11, delta, fontsize=7.5, color='#94a3b8', transform=ax_side.transAxes)
         y_pos -= 0.20
 
-    out_p2 = "powerbi/screenshots/page2_dynamic_safety_stock.png"
+    out_p2 = "powerbi/mockups/page2_dynamic_safety_stock.png"
     plt.savefig(out_p2, facecolor=fig2.get_facecolor(), bbox_inches='tight')
     plt.close()
     print(f"  [OK] Rendered Masterclass Page 2 Mockup: {out_p2}")
@@ -231,7 +231,7 @@ def render_executive_dashboard():
         h = b.get_height()
         ax_aging.text(b.get_x() + b.get_width()/2, h + 1.2, f"${h:.2f}M", ha='center', color='#f8fafc', fontsize=8.5, fontweight='bold')
 
-    out_p3 = "powerbi/screenshots/page3_abc_xyz_aging_matrix.png"
+    out_p3 = "powerbi/mockups/page3_abc_xyz_aging_matrix.png"
     plt.savefig(out_p3, facecolor=fig3.get_facecolor(), bbox_inches='tight')
     plt.close()
     print(f"  [OK] Rendered Masterclass Page 3 Mockup: {out_p3}")

@@ -29,6 +29,32 @@ realistic-looking inputs. They are not evidence of realized savings.
 
 ---
 
+## Power BI Deliverables
+
+**Shipped and openable in Power BI Desktop:**
+
+| Artifact | What it is |
+|---|---|
+| [`powerbi/SIOP_Inventory_Optimization.pbit`](powerbi/SIOP_Inventory_Optimization.pbit) | Power BI template with the star-schema dataset |
+| [`powerbi/SIOP_Project.pbip`](powerbi/SIOP_Project.pbip) | Power BI Project format (`model.bim` + report definition) |
+| [`powerbi/SIOP_MultiPlant_DataModel.xlsx`](powerbi/SIOP_MultiPlant_DataModel.xlsx) | Star-schema Excel model, 1 fact + 5 dimensions |
+| [`powerbi/dax_measures_masterclass.md`](powerbi/dax_measures_masterclass.md) | DAX for DOH, inventory turns, dynamic safety stock, E&O reserves |
+| [`powerbi/theme_executive_dark.json`](powerbi/theme_executive_dark.json) | Report theme |
+
+**Design mockups — not screen captures:**
+
+The images in [`powerbi/mockups/`](powerbi/mockups/) are rendered with **matplotlib**,
+not captured from Power BI. They are the target layout for the report: page
+composition, KPI hierarchy, colour semantics, and drill path. The `.pbit` above
+carries a starter layout and does not yet reproduce them; building that out in
+Power BI Desktop is the open work item.
+
+![SCM war room mockup](powerbi/mockups/page1_executive_command_center.png)
+
+See [`powerbi/mockups/README.md`](powerbi/mockups/README.md) for the full breakdown.
+
+---
+
 ## 📌 Executive Summary & Business Impact
 
 In global electrical, aerospace, and industrial power manufacturing, managing inventory requires balancing two conflicting objectives:

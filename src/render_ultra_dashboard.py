@@ -36,12 +36,12 @@ def render_ultra_suite():
     ax_top.axis('off')
     r_top = patches.FancyBboxPatch((0, 0), 1, 1, boxstyle="round,pad=0.015", fc="#0f172a", ec="#1e293b", lw=1.5, transform=ax_top.transAxes)
     ax_top.add_patch(r_top)
-    ax_top.text(0.015, 0.65, "EATON SCM WAR ROOM | GLOBAL INVENTORY & WORKING CAPITAL PULSE", fontsize=15, fontweight='bold', color='#38bdf8', va='center')
-    ax_top.text(0.015, 0.25, "Executive Dashboard · Direct Lake Architecture · Multi-Plant ERP Stream · Real-Time Optimization Engine", fontsize=8.5, color='#94a3b8', va='center')
+    ax_top.text(0.015, 0.65, "SCM WAR ROOM | GLOBAL INVENTORY & WORKING CAPITAL PULSE", fontsize=15, fontweight='bold', color='#38bdf8', va='center')
+    ax_top.text(0.015, 0.25, "DESIGN MOCKUP (matplotlib) — not a Power BI screen capture · Simulated data · Target layout for the Power BI build", fontsize=8.5, color='#94a3b8', va='center')
     
     # System Status Badge & Refresh
     ax_top.text(0.985, 0.65, "SYSTEM HEALTH: 100% NOMINAL · ZERO ETL ERRORS", fontsize=8, fontweight='bold', color='#10b981', ha='right', va='center')
-    ax_top.text(0.985, 0.25, "DATA REFRESH: DIRECT LAKE LIVE | MODEL: STAR SCHEMA V3.2", fontsize=7.5, color='#64748b', ha='right', va='center')
+    ax_top.text(0.985, 0.25, "DATA REFRESH: STATIC MOCKUP (NOT LIVE) | MODEL: STAR SCHEMA V3.2", fontsize=7.5, color='#64748b', ha='right', va='center')
 
     # 2. Interactive Global Slicer Pill Bar
     ax_slicer = fig1.add_axes([0.02, 0.865, 0.96, 0.048])
@@ -178,7 +178,7 @@ def render_ultra_suite():
         ax_tbl.plot([0.015, 0.985], [y_tbl - 0.035, y_tbl - 0.035], color='#1e293b', lw=0.5, alpha=0.5, transform=ax_tbl.transAxes)
         y_tbl -= 0.11
 
-    p1_out = "powerbi/screenshots/page1_executive_command_center.png"
+    p1_out = "powerbi/mockups/page1_executive_command_center.png"
     plt.savefig(p1_out, facecolor=fig1.get_facecolor(), bbox_inches='tight')
     plt.close()
     print(f"  [OK] Rendered Ultra SCM War Room (Page 1): {p1_out}")
@@ -195,7 +195,7 @@ def render_ultra_suite():
     r_top2 = patches.FancyBboxPatch((0, 0), 1, 1, boxstyle="round,pad=0.015", fc="#0f172a", ec="#1e293b", lw=1.5, transform=ax_top2.transAxes)
     ax_top2.add_patch(r_top2)
     ax_top2.text(0.015, 0.65, "SIOP DEMAND FORECASTING & MONTE CARLO DIGITAL TWIN", fontsize=15, fontweight='bold', color='#38bdf8', va='center')
-    ax_top2.text(0.015, 0.25, "Holt-Winters Trend Smoothing · 95% Confidence Fan Cone · Tracking Signal Bias Alert · Stochastic Lead Time", fontsize=8.5, color='#94a3b8', va='center')
+    ax_top2.text(0.015, 0.25, "DESIGN MOCKUP (matplotlib) — not a Power BI screen capture · Holt-Winters fan cone · Simulated data", fontsize=8.5, color='#94a3b8', va='center')
     ax_top2.text(0.985, 0.50, "WAPE: 6.8% | MAPE: 8.2% | FORECAST BIAS: +0.4 (OPTIMAL)", fontsize=8.5, fontweight='bold', color='#10b981', ha='right', va='center')
 
     # Chart 1 Left: Holt-Winters Demand Forecasting Line with 95% Confidence Cone
@@ -296,7 +296,7 @@ def render_ultra_suite():
     ax_mc.legend(loc='upper right', fontsize=7.5, facecolor='#0f172a', edgecolor='#1e293b')
     ax_mc.grid(color='#1e293b', linestyle='--', alpha=0.7)
 
-    p2_out = "powerbi/screenshots/page2_dynamic_safety_stock.png"
+    p2_out = "powerbi/mockups/page2_dynamic_safety_stock.png"
     plt.savefig(p2_out, facecolor=fig2.get_facecolor(), bbox_inches='tight')
     plt.close()
     print(f"  [OK] Rendered Ultra Stochastic Digital Twin (Page 2): {p2_out}")
@@ -313,7 +313,7 @@ def render_ultra_suite():
     r_top3 = patches.FancyBboxPatch((0, 0), 1, 1, boxstyle="round,pad=0.015", fc="#0f172a", ec="#1e293b", lw=1.5, transform=ax_top3.transAxes)
     ax_top3.add_patch(r_top3)
     ax_top3.text(0.015, 0.65, "DUAL ABC-XYZ DEMAND VOLATILITY & E&O CAPITAL RECOVERY", fontsize=15, fontweight='bold', color='#38bdf8', va='center')
-    ax_top3.text(0.015, 0.25, "9-Box Multi-Dimensional Segmentation · 4-Tier Aging Waterfall · $1.24M Reclamation Protocol", fontsize=8.5, color='#94a3b8', va='center')
+    ax_top3.text(0.015, 0.25, "DESIGN MOCKUP (matplotlib) — not a Power BI screen capture · 9-box ABC-XYZ segmentation · Simulated data", fontsize=8.5, color='#94a3b8', va='center')
     ax_top3.text(0.985, 0.50, "RECLAMATION CAPITAL POTENTIAL: $1.24M | WORKING CAPITAL -14%", fontsize=8.5, fontweight='bold', color='#10b981', ha='right', va='center')
 
     # Chart 1 Left: 9-Box ABC-XYZ Grid
@@ -394,7 +394,7 @@ def render_ultra_suite():
         ax_bot3.plot([0.015, 0.985], [y_strat - 0.14, y_strat - 0.14], color='#1e293b', lw=0.6, transform=ax_bot3.transAxes)
         y_strat -= 0.22
 
-    p3_out = "powerbi/screenshots/page3_abc_xyz_aging_matrix.png"
+    p3_out = "powerbi/mockups/page3_abc_xyz_aging_matrix.png"
     plt.savefig(p3_out, facecolor=fig3.get_facecolor(), bbox_inches='tight')
     plt.close()
     print(f"  [OK] Rendered Ultra ABC-XYZ Matrix & Recovery (Page 3): {p3_out}")

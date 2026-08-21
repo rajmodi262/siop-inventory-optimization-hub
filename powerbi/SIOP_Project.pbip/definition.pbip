@@ -3,7 +3,7 @@
   "artifacts": [
     {
       "report": {
-        "path": "Eaton_SIOP.Report"
+        "path": "SIOP.Report"
       }
     }
   ]

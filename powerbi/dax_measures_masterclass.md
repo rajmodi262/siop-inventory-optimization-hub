@@ -195,7 +195,7 @@ RETURN
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   EATON SCM EXECUTIVE SUITE (5 PAGES)                                  │
+│                                   SCM EXECUTIVE SUITE (5 PAGES)                                  │
 ├────────────────────────────────────────────────────────────────────────────────────────────────────────┤
 │ Page 1: 📊 Executive Command Center & Capital Pulse                                                    │
 │         • 4 Top Telemetry KPI Cards with target delta badges                                           │

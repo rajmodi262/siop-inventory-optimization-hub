@@ -1,9 +1,9 @@
 """
-Enterprise Power BI Template & Dataset Bundle Builder for Eaton SIOP & Inventory Optimization Hub.
+Enterprise Power BI Template & Dataset Bundle Builder for Multi-Plant SIOP & Inventory Optimization Hub.
 Generates:
-1. Eaton_SIOP_Inventory_Optimization.pbit (Power BI Template Archive)
-2. Eaton_SIOP_Inventory_Project.pbip (Power BI Modern Project Format)
-3. Eaton_SIOP_MultiPlant_DataModel.xlsx (Pre-loaded Excel Power Pivot Data Model)
+1. SIOP_Inventory_Optimization.pbit (Power BI Template Archive)
+2. SIOP_Inventory_Project.pbip (Power BI Modern Project Format)
+3. SIOP_MultiPlant_DataModel.xlsx (Pre-loaded Excel Power Pivot Data Model)
 """
 
 import os
@@ -26,7 +26,7 @@ def create_powerbi_bundle():
     df_plants, df_suppliers, df_skus, df_dates, df_snapshots = generate_siop_dataset(num_skus=150, days=60, seed=42)
     
     # 1. Create Pre-Packaged Excel Workbook with All Star-Schema Tables
-    excel_path = "powerbi/Eaton_SIOP_MultiPlant_DataModel.xlsx"
+    excel_path = "powerbi/SIOP_MultiPlant_DataModel.xlsx"
     os.makedirs("powerbi", exist_ok=True)
     
     with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
@@ -40,7 +40,7 @@ def create_powerbi_bundle():
 
     # 2. Build Power BI Tabular Model Schema (BIM / DataModelSchema)
     data_model_schema = {
-        "name": "Eaton_SIOP_DataModel",
+        "name": "SIOP_DataModel",
         "compatibilityLevel": 1550,
         "model": {
             "culture": "en-US",
@@ -155,7 +155,7 @@ def create_powerbi_bundle():
     }
 
     # 4. Pack into Power BI Template Archive (.pbit)
-    pbit_path = "powerbi/Eaton_SIOP_Inventory_Optimization.pbit"
+    pbit_path = "powerbi/SIOP_Inventory_Optimization.pbit"
     content_types_xml = """<?xml version="1.0" encoding="utf-8"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
   <Default Extension="json" ContentType="" />
@@ -176,17 +176,17 @@ def create_powerbi_bundle():
     print(f"  [OK] Assembled Power BI Template File (.pbit): {pbit_path}")
 
     # 5. Build Power BI Project (.pbip) Directory Structure
-    pbip_dir = "powerbi/Eaton_SIOP_Project.pbip"
-    os.makedirs(f"{pbip_dir}/Eaton_SIOP.Report", exist_ok=True)
-    os.makedirs(f"{pbip_dir}/Eaton_SIOP.Dataset", exist_ok=True)
+    pbip_dir = "powerbi/SIOP_Project.pbip"
+    os.makedirs(f"{pbip_dir}/SIOP.Report", exist_ok=True)
+    os.makedirs(f"{pbip_dir}/SIOP.Dataset", exist_ok=True)
     
     with open(f"{pbip_dir}/definition.pbip", "w") as f:
-        json.dump({"version": "1.0", "artifacts": [{"report": {"path": "Eaton_SIOP.Report"}}]}, f, indent=2)
+        json.dump({"version": "1.0", "artifacts": [{"report": {"path": "SIOP.Report"}}]}, f, indent=2)
         
-    with open(f"{pbip_dir}/Eaton_SIOP.Dataset/model.bim", "w") as f:
+    with open(f"{pbip_dir}/SIOP.Dataset/model.bim", "w") as f:
         json.dump(data_model_schema, f, indent=2)
         
-    with open(f"{pbip_dir}/Eaton_SIOP.Report/report.json", "w") as f:
+    with open(f"{pbip_dir}/SIOP.Report/report.json", "w") as f:
         json.dump(report_layout, f, indent=2)
         
     print(f"  [OK] Created Modern Power BI Project Format (.pbip): {pbip_dir}")
