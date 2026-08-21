@@ -5,16 +5,33 @@
 [![DuckDB](https://img.shields.io/badge/DuckDB-In--Process_Warehouse-FFF000.svg?logo=duckdb&logoColor=black)](https://duckdb.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Star_Schema-336791.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Interactive_App-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io)
-[![Tests](https://img.shields.io/badge/PyTest-7%20Passing-success.svg?logo=pytest&logoColor=white)](https://pytest.org)
-[![Domain](https://img.shields.io/badge/Domain-Supply_Chain_%26_SIOP-green.svg)](https://eaton.com)
+[![Tests](https://img.shields.io/badge/PyTest-8%20Passing-success.svg?logo=pytest&logoColor=white)](https://pytest.org)
+![Domain](https://img.shields.io/badge/Domain-Supply_Chain_%26_SIOP-green.svg)
 
 > **An enterprise-grade analytical platform and executive decision intelligence engine designed for multi-plant manufacturing networks.** Bridges Sales, Inventory, and Operations Planning (**SIOP**) by calculating dynamic safety stock buffers under stochastic lead-time volatility, generating **Holt-Winters time-series demand forecasts (WAPE / MAPE)**, monitoring Days of Inventory on Hand (**DOH**), isolating Excess & Obsolete (**E&O**) reserves, and enforcing automated data quality governance before BI ingestion.
 
 ---
 
+## Data Provenance
+
+**All data in this repository is synthetic.** There is no real company data here — no ERP extract,
+no vendor master, and no proprietary information from any employer or client.
+
+Every table is produced by [`src/data_generator.py`](src/data_generator.py) from seeded NumPy
+pseudo-random draws (`seed=42`), so any run reproduces the same dataset byte for byte. The plants,
+suppliers, SKUs, and daily inventory snapshots are fictional and were designed to exercise the
+analytics, not to describe a real manufacturing network.
+
+**Consequently, every business figure in this README — the 14% working-capital reduction, the
+dormant-stock value, DOH and turns — is a property of the simulation, not a measured outcome for
+any organization.** They show that the calculations are implemented and behave sensibly under
+realistic-looking inputs. They are not evidence of realized savings.
+
+---
+
 ## 📌 Executive Summary & Business Impact
 
-In global manufacturing ecosystems (such as **Eaton's Electrical, Aerospace, and Industrial Power businesses**), managing inventory requires balancing two conflicting objectives:
+In global electrical, aerospace, and industrial power manufacturing, managing inventory requires balancing two conflicting objectives:
 1. **Minimizing Working Capital**: Holding excessive inventory incurs high carrying costs ($20\text{--}25\%$ annual holding rate).
 2. **Mitigating Stockout & Line-Stoppage Risk**: A missing electrical component or valve halts multimillion-dollar production schedules.
 
@@ -32,7 +49,7 @@ This platform replaces static ERP reorder rules with **statistical distribution 
 ```mermaid
 flowchart TD
     subgraph Data_Layer ["1. ERP & Transactional Ingestion"]
-        ERP["ERP System Logs\n(SAP / Oracle / CSV Snapshots)"]
+        ERP["Simulated ERP Extract\n(synthetic CSV snapshots)"]
         PLANT["dim_plant\n(5 Manufacturing Facilities)"]
         SKU["dim_product_sku\n(1,500+ SKUs / ABC-XYZ)"]
         SUP["dim_supplier\n(Lead Time & Variance)"]

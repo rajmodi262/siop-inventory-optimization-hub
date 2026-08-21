@@ -3,7 +3,7 @@ version: '3.8'
 services:
   siop-app:
     build: .
-    container_name: eaton_siop_inventory_hub
+    container_name: siop_inventory_hub
     ports:
       - "8501:8501"
     volumes:

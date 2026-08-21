@@ -15,7 +15,7 @@ def generate_siop_dataset(num_skus=200, days=90, seed=42):
     
     # 1. Plants (Manufacturing Centers)
     plants_data = [
-        {"plant_id": "PL-PUN", "plant_name": "Eaton Pune Power Electronics Plant", "region": "APAC", "country": "India", "city": "Pune", "manufacturing_focus": "EV Inverters & Microcontrollers", "operating_capacity_pct": 88.5, "annual_holding_rate_pct": 22.0},
+        {"plant_id": "PL-PUN", "plant_name": "Pune Power Electronics Plant", "region": "APAC", "country": "India", "city": "Pune", "manufacturing_focus": "EV Inverters & Microcontrollers", "operating_capacity_pct": 88.5, "annual_holding_rate_pct": 22.0},
         {"plant_id": "PL-TEX", "plant_name": "Texas Heavy Transformer Facility", "region": "Americas", "country": "USA", "city": "Houston", "manufacturing_focus": "Grid Step-Down Transformers", "operating_capacity_pct": 92.0, "annual_holding_rate_pct": 24.0},
         {"plant_id": "PL-SHA", "plant_name": "Shanghai Switchgear Automation Hub", "region": "APAC", "country": "China", "city": "Shanghai", "manufacturing_focus": "Medium Voltage Switchgears", "operating_capacity_pct": 85.0, "annual_holding_rate_pct": 20.0},
         {"plant_id": "PL-STU", "plant_name": "Stuttgart Industrial Hydraulics", "region": "EMEA", "country": "Germany", "city": "Stuttgart", "manufacturing_focus": "Aerospace & Industrial Valves", "operating_capacity_pct": 81.0, "annual_holding_rate_pct": 25.0},

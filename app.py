@@ -17,7 +17,7 @@ from src.monte_carlo_simulator import SCMDigitalTwinSimulator
 from src.export_powerbi_dataset import export_powerbi_tables
 
 st.set_page_config(
-    page_title="Eaton SIOP & Inventory Optimization Hub",
+    page_title="Multi-Plant SIOP & Inventory Optimization Hub",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -45,7 +45,6 @@ mrp_engine = SCMMrpEngine()
 simulator = SCMDigitalTwinSimulator(num_simulations=2000, horizon_days=90)
 
 # Sidebar Controls
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Eaton_Corporation_logo.svg/320px-Eaton_Corporation_logo.svg.png", width=160)
 st.sidebar.title("SIOP Control Center")
 st.sidebar.markdown("---")
 

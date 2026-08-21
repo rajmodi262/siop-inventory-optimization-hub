@@ -10,7 +10,7 @@ from typing import Dict, List, Any
 
 class SCMMrpEngine:
     def __init__(self):
-        # Define enterprise BOM hierarchy for Eaton electrical equipment
+        # Define enterprise BOM hierarchy for electrical equipment
         self.bom_hierarchy = {
             "FG-TRF-500KVA": {  # Finished Good: Step-Down Transformer 500kVA
                 "name": "Industrial Step-Down Transformer 500kVA",
