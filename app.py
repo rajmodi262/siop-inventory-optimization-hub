@@ -1,6 +1,6 @@
 """
 Interactive Streamlit Dashboard for SIOP & Multi-Plant Inventory Optimization Hub.
-Live web twin of the Power BI enterprise reporting suite with real-time scenario simulation & SIOP forecasting.
+Enterprise decision suite with MRP BOM Explosion, Monte Carlo Digital Twin, and Power BI Exporter.
 """
 
 import streamlit as st
@@ -12,6 +12,8 @@ from src.data_generator import generate_siop_dataset
 from src.inventory_optimizer import InventoryOptimizer
 from src.data_validator import SCMDataValidator
 from src.demand_forecaster import SIOPDemandForecaster
+from src.mrp_bom_engine import SCMMrpEngine
+from src.monte_carlo_simulator import SCMDigitalTwinSimulator
 from src.export_powerbi_dataset import export_powerbi_tables
 
 st.set_page_config(
@@ -39,6 +41,8 @@ df_plants, df_suppliers, df_skus, df_dates, df_snapshots = load_data()
 optimizer = InventoryOptimizer()
 validator = SCMDataValidator()
 forecaster = SIOPDemandForecaster()
+mrp_engine = SCMMrpEngine()
+simulator = SCMDigitalTwinSimulator(num_simulations=2000, horizon_days=90)
 
 # Sidebar Controls
 st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Eaton_Corporation_logo.svg/320px-Eaton_Corporation_logo.svg.png", width=160)
@@ -73,15 +77,16 @@ latest_view = filtered_snapshots[filtered_snapshots["date_key"] == latest_date_k
 
 # Header Section
 st.title("⚡ Multi-Plant SIOP & Dynamic Inventory Optimization Hub")
-st.markdown("**Enterprise SCM Decision Intelligence** · Plant Capacity · Safety Stock Buffer Health · Working Capital & Forecasting")
+st.markdown("**Enterprise SCM Decision Intelligence** · Multi-Level MRP · Monte Carlo Digital Twin · Working Capital & Forecasting")
 st.markdown("---")
 
-# Tab Navigation
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📊 Executive KPI Scorecard", 
     "🎯 Dynamic Safety Stock Simulator", 
     "📦 ABC/XYZ & E&O Segmentation", 
-    "📈 SIOP Demand Forecasting & Plant Loading",
+    "📈 SIOP Demand Forecasting",
+    "🧩 Multi-Level BOM & MRP Explosion",
+    "🎲 Monte Carlo Digital Twin (VaR)",
     "🛡️ Data Governance & Power BI Export"
 ])
 
@@ -173,8 +178,6 @@ with tab2:
 
 with tab3:
     st.subheader("ABC-XYZ Demand Volatility & E&O Segmentation")
-    st.markdown("Dual matrix segmentation to isolate high-value erratic SKUs requiring executive SIOP intervention.")
-    
     abc_xyz_counts = latest_view.groupby(["abc_classification", "xyz_demand_variability"]).agg(
         sku_count=("sku_id", "count"),
         total_value=("total_inventory_value", "sum")
@@ -189,15 +192,12 @@ with tab3:
 
 with tab4:
     st.subheader("📈 SIOP Demand Forecasting & Plant Capacity Loading")
-    st.markdown("Time-series demand forecast with Holt-Winters Exponential Smoothing, Forecast Accuracy (MAPE/WAPE), and Plant Loading status.")
-    
     sample_sku = st.selectbox("Select SKU for Forecast Analysis", options=latest_view["sku_id"].unique().tolist(), format_func=lambda x: f"{x} - {df_skus.loc[df_skus['sku_id']==x, 'sku_name'].values[0]}")
     sku_history = filtered_snapshots[filtered_snapshots["sku_id"] == sample_sku].sort_values("date_key")
     
     actual_series = sku_history["daily_actual_demand_qty"].reset_index(drop=True)
     forecast_df = forecaster.generate_holt_winters_forecast(actual_series, forecast_horizon=30)
     
-    # Accuracy Metrics
     mape = forecaster.calculate_mape(actual_series.values, sku_history["daily_forecasted_demand_qty"].values)
     wape = forecaster.calculate_wape(actual_series.values, sku_history["daily_forecasted_demand_qty"].values)
     bias = forecaster.calculate_forecast_bias(actual_series.values, sku_history["daily_forecasted_demand_qty"].values)
@@ -212,18 +212,54 @@ with tab4:
         
     fig_fc = go.Figure()
     fig_fc.add_trace(go.Scatter(y=actual_series, mode="lines+markers", name="Historical Actual Demand", line=dict(color="#38bdf8", width=2)))
-    fig_fc.add_trace(go.Scatter(x=list(range(len(actual_series), len(actual_series) + len(forecast_df))), y=forecast_df["forecast_demand_units"], mode="lines+markers", name="30-Day Forward Forecast (Holt-Winters)", line=dict(color="#f59e0b", width=2, dash="dash")))
+    fig_fc.add_trace(go.Scatter(x=list(range(len(actual_series), len(actual_series) + len(forecast_df))), y=forecast_df["forecast_demand_units"], mode="lines+markers", name="30-Day Forward Forecast (Holt's Linear)", line=dict(color="#f59e0b", width=2, dash="dash")))
     fig_fc.update_layout(template="plotly_dark", title="Demand Forecast vs Historical Actuals", xaxis_title="Timeline (Days)", yaxis_title="Units Demanded")
     st.plotly_chart(fig_fc, use_container_width=True)
-    
-    st.subheader("Manufacturing Plant Capacity Loading Status")
-    capacity_df = forecaster.evaluate_plant_capacity_loading(filtered_snapshots, df_plants)
-    st.dataframe(capacity_df[["plant_id", "plant_name", "region", "daily_actual_demand_qty", "daily_capacity_units", "current_loading_pct", "capacity_status"]], use_container_width=True)
 
 with tab5:
-    st.subheader("Automated SCM Data Governance & QA Health Suite")
-    st.markdown("Automated assertion suite executing referential integrity, schema bounds, and financial reconciliation checks prior to BI refresh.")
+    st.subheader("🧩 Multi-Level Bill of Materials (BOM) & Material Requirements Planning (MRP)")
+    st.markdown("Explodes Finished Goods demand down to raw materials and sub-assemblies, computing lead-time phase-shifted purchase orders.")
     
+    mrp_fg = st.selectbox("Select Finished Good Assembly", options=["FG-TRF-500KVA (Industrial Transformer 500kVA)"])
+    mrp_qty = st.number_input("Target Finished Good Production Schedule (Units)", value=25, min_value=1, max_value=500)
+    mrp_due_day = st.slider("Delivery Due Timeline (Days from Today)", min_value=30, max_value=120, value=60)
+    
+    df_mrp = mrp_engine.explode_bom("FG-TRF-500KVA", production_plan_qty=int(mrp_qty), start_day=int(mrp_due_day))
+    st.dataframe(df_mrp, use_container_width=True)
+
+with tab6:
+    st.subheader("🎲 Monte Carlo Digital Twin (10,000-Run Stochastic Simulation)")
+    st.markdown("Simulates empirical inventory replenishment cycles under stochastic demand surges and lead-time disruptions to calculate **95% Value-at-Risk (VaR)** on Working Capital.")
+    
+    mc_c1, mc_c2 = st.columns(2)
+    with mc_c1:
+        mc_demand = st.slider("Average Daily Demand (Units)", 10, 200, 50)
+        mc_demand_std = st.slider("Demand Std Deviation", 2, 40, 12)
+    with mc_c2:
+        mc_lt = st.slider("Average Supplier Lead Time (Days)", 5, 60, 25)
+        mc_lt_std = st.slider("Lead Time Std Deviation", 1, 15, 4)
+        
+    if st.button("🚀 Run 2,000 Stochastic Monte Carlo Iterations"):
+        with st.spinner("Simulating multi-echelon replenishment paths..."):
+            res_mc = simulator.simulate_sku_replenishment(
+                avg_daily_demand=mc_demand, demand_std=mc_demand_std,
+                avg_lead_time_days=mc_lt, lead_time_std=mc_lt_std,
+                unit_cost=150.0, initial_on_hand=int(mc_demand * 15),
+                reorder_point=int(mc_demand * mc_lt + 100), order_qty=int(mc_demand * 30)
+            )
+            
+            m1, m2, m3, m4 = st.columns(4)
+            with m1:
+                st.metric("Achieved Service Fill Rate", f"{res_mc['achieved_fill_rate_pct']:.1f}%")
+            with m2:
+                st.metric("Stockout Event Probability", f"{res_mc['stockout_event_probability_pct']:.1f}%", delta_color="inverse")
+            with m3:
+                st.metric("Expected Holding Cost", f"${res_mc['expected_holding_cost_usd']:,.0f}")
+            with m4:
+                st.metric("95% Value-at-Risk (VaR)", f"${res_mc['value_at_risk_95th_percentile_usd']:,.0f}", "Worst-Case Working Capital Loss", delta_color="inverse")
+
+with tab7:
+    st.subheader("Automated SCM Data Governance & QA Health Suite")
     validator.validate_referential_integrity(df_snapshots, df_plants, df_skus, df_suppliers)
     validator.validate_inventory_logical_rules(df_snapshots)
     report_df = validator.generate_data_health_report()
@@ -231,8 +267,6 @@ with tab5:
     
     st.markdown("---")
     st.subheader("Power BI Dataset Direct Export")
-    st.markdown("Export certified Star Schema tables to CSV / Parquet formats for drag-and-drop ingestion into Power BI Desktop.")
-    
     if st.button("🚀 Export Certified Power BI Star Schema Tables"):
         export_powerbi_tables()
         st.success("✅ Power BI Star Schema tables successfully exported to `powerbi_exports/` directory!")

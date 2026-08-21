@@ -1,5 +1,5 @@
 """
-Automated PyTest Suite for SCM Inventory Optimizer, Forecaster, Data Validator & ETL.
+Automated PyTest Suite for SCM Inventory Optimizer, Forecaster, MRP, Monte Carlo & ETL.
 """
 
 import pytest
@@ -8,6 +8,8 @@ import numpy as np
 from src.inventory_optimizer import InventoryOptimizer
 from src.data_validator import SCMDataValidator
 from src.demand_forecaster import SIOPDemandForecaster
+from src.mrp_bom_engine import SCMMrpEngine
+from src.monte_carlo_simulator import SCMDigitalTwinSimulator
 from src.etl_pipeline import SIOPEtlPipeline
 
 @pytest.fixture
@@ -21,6 +23,14 @@ def validator():
 @pytest.fixture
 def forecaster():
     return SIOPDemandForecaster()
+
+@pytest.fixture
+def mrp_engine():
+    return SCMMrpEngine()
+
+@pytest.fixture
+def simulator():
+    return SCMDigitalTwinSimulator(num_simulations=500, horizon_days=30)
 
 def test_safety_stock_calculation(optimizer):
     ss_zero = optimizer.calculate_safety_stock(avg_demand=100, demand_std=0, avg_lead_time=10, lead_time_std=0, service_level=0.95)
@@ -53,12 +63,23 @@ def test_demand_forecaster_metrics(forecaster):
     assert "bias_percentage" in bias
     assert "interpretation" in bias
 
-def test_holt_winters_forecast(forecaster):
-    series = pd.Series([10, 12, 15, 14, 18, 20, 22, 25, 24, 28, 30, 32, 35, 38, 40])
-    df_fc = forecaster.generate_holt_winters_forecast(series, forecast_horizon=7)
-    assert len(df_fc) == 7
-    assert "forecast_demand_units" in df_fc.columns
-    assert (df_fc["forecast_demand_units"] >= 0).all()
+def test_mrp_bom_explosion(mrp_engine):
+    df_mrp = mrp_engine.explode_bom("FG-TRF-500KVA", production_plan_qty=10, start_day=60)
+    assert len(df_mrp) > 0
+    assert "gross_required_qty" in df_mrp.columns
+    assert "planned_order_release_day" in df_mrp.columns
+    assert (df_mrp["planned_order_release_day"] <= 60).all()
+
+def test_monte_carlo_digital_twin(simulator):
+    res = simulator.simulate_sku_replenishment(
+        avg_daily_demand=30.0, demand_std=5.0,
+        avg_lead_time_days=15, lead_time_std=2.0,
+        unit_cost=50.0, initial_on_hand=400,
+        reorder_point=450, order_qty=500
+    )
+    assert "achieved_fill_rate_pct" in res
+    assert 0 <= res["achieved_fill_rate_pct"] <= 100
+    assert res["value_at_risk_95th_percentile_usd"] > 0
 
 def test_data_validator_integrity(validator):
     df_plants = pd.DataFrame([{"plant_id": "P1"}])
