@@ -1,0 +1,347 @@
+{
+  "name": "Eaton_SIOP_DataModel",
+  "compatibilityLevel": 1550,
+  "model": {
+    "culture": "en-US",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "Local_CSV_Exports",
+        "connectionDetails": {
+          "protocol": "file",
+          "address": {
+            "path": "./data/"
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "dim_plant",
+        "columns": [
+          {
+            "name": "plant_id",
+            "dataType": "string"
+          },
+          {
+            "name": "plant_name",
+            "dataType": "string"
+          },
+          {
+            "name": "region",
+            "dataType": "string"
+          },
+          {
+            "name": "country",
+            "dataType": "string"
+          },
+          {
+            "name": "city",
+            "dataType": "string"
+          },
+          {
+            "name": "manufacturing_focus",
+            "dataType": "string"
+          },
+          {
+            "name": "operating_capacity_pct",
+            "dataType": "double"
+          },
+          {
+            "name": "annual_holding_rate_pct",
+            "dataType": "double"
+          }
+        ]
+      },
+      {
+        "name": "dim_product_sku",
+        "columns": [
+          {
+            "name": "sku_id",
+            "dataType": "string"
+          },
+          {
+            "name": "sku_name",
+            "dataType": "string"
+          },
+          {
+            "name": "product_category",
+            "dataType": "string"
+          },
+          {
+            "name": "product_subfamily",
+            "dataType": "string"
+          },
+          {
+            "name": "abc_classification",
+            "dataType": "string"
+          },
+          {
+            "name": "xyz_demand_variability",
+            "dataType": "string"
+          },
+          {
+            "name": "unit_of_measure",
+            "dataType": "string"
+          },
+          {
+            "name": "standard_unit_cost",
+            "dataType": "double"
+          },
+          {
+            "name": "target_service_level_pct",
+            "dataType": "double"
+          },
+          {
+            "name": "min_order_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "pack_size",
+            "dataType": "double"
+          }
+        ]
+      },
+      {
+        "name": "dim_supplier",
+        "columns": [
+          {
+            "name": "supplier_id",
+            "dataType": "string"
+          },
+          {
+            "name": "supplier_name",
+            "dataType": "string"
+          },
+          {
+            "name": "tier_level",
+            "dataType": "string"
+          },
+          {
+            "name": "country",
+            "dataType": "string"
+          },
+          {
+            "name": "avg_contracted_lead_time_days",
+            "dataType": "double"
+          },
+          {
+            "name": "lead_time_std_dev_days",
+            "dataType": "double"
+          },
+          {
+            "name": "historical_otif_pct",
+            "dataType": "double"
+          },
+          {
+            "name": "single_source_flag",
+            "dataType": "double"
+          }
+        ]
+      },
+      {
+        "name": "dim_date",
+        "columns": [
+          {
+            "name": "date_key",
+            "dataType": "int64"
+          },
+          {
+            "name": "full_date",
+            "dataType": "string"
+          },
+          {
+            "name": "year",
+            "dataType": "int64"
+          },
+          {
+            "name": "quarter",
+            "dataType": "string"
+          },
+          {
+            "name": "month",
+            "dataType": "int64"
+          },
+          {
+            "name": "month_name",
+            "dataType": "string"
+          },
+          {
+            "name": "week_of_year",
+            "dataType": "int64"
+          },
+          {
+            "name": "is_weekend",
+            "dataType": "int64"
+          },
+          {
+            "name": "is_holiday",
+            "dataType": "int64"
+          },
+          {
+            "name": "fiscal_quarter",
+            "dataType": "string"
+          }
+        ]
+      },
+      {
+        "name": "fact_inventory_daily_snapshot",
+        "columns": [
+          {
+            "name": "snapshot_id",
+            "dataType": "double"
+          },
+          {
+            "name": "date_key",
+            "dataType": "double"
+          },
+          {
+            "name": "plant_id",
+            "dataType": "string"
+          },
+          {
+            "name": "sku_id",
+            "dataType": "string"
+          },
+          {
+            "name": "supplier_id",
+            "dataType": "string"
+          },
+          {
+            "name": "on_hand_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "in_transit_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "allocated_wip_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "backorder_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "available_to_promise_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "unit_cost",
+            "dataType": "double"
+          },
+          {
+            "name": "total_inventory_value",
+            "dataType": "double"
+          },
+          {
+            "name": "daily_actual_demand_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "daily_forecasted_demand_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "trailing_90d_avg_daily_demand",
+            "dataType": "double"
+          },
+          {
+            "name": "trailing_90d_demand_std_dev",
+            "dataType": "double"
+          },
+          {
+            "name": "lead_time_days",
+            "dataType": "double"
+          },
+          {
+            "name": "calculated_safety_stock_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "calculated_reorder_point_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "calculated_economic_order_qty",
+            "dataType": "double"
+          },
+          {
+            "name": "days_of_inventory_on_hand",
+            "dataType": "double"
+          },
+          {
+            "name": "is_stockout_flag",
+            "dataType": "double"
+          },
+          {
+            "name": "is_excess_inventory_flag",
+            "dataType": "double"
+          },
+          {
+            "name": "dormant_days_since_last_movement",
+            "dataType": "double"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Inventory Value",
+            "expression": "SUM(fact_inventory_daily_snapshot[total_inventory_value])",
+            "formatString": "\\$#,0"
+          },
+          {
+            "name": "Days of Inventory on Hand (DOH)",
+            "expression": "VAR OnHand = SUM(fact_inventory_daily_snapshot[on_hand_qty]) VAR DailyDem = SUM(fact_inventory_daily_snapshot[trailing_90d_avg_daily_demand]) RETURN IF(DailyDem > 0, DIVIDE(OnHand, DailyDem, 0), BLANK())",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Dynamic Safety Stock",
+            "expression": "VAR Z_Score = 1.645 VAR AvgDailyDemand = AVERAGE(fact_inventory_daily_snapshot[trailing_90d_avg_daily_demand]) VAR DemandVar = POWER(STDEV.S(fact_inventory_daily_snapshot[daily_actual_demand_qty]), 2) VAR AvgLT = AVERAGE(fact_inventory_daily_snapshot[lead_time_days]) VAR LTVar = POWER(AVERAGE(dim_supplier[lead_time_std_dev_days]), 2) VAR CombVar = (AvgLT * DemandVar) + (POWER(AvgDailyDemand, 2) * LTVar) RETURN IF(CombVar > 0, Z_Score * SQRT(CombVar), 0)",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Excess & Obsolete (E&O) Value",
+            "expression": "CALCULATE([Total Inventory Value], FILTER(fact_inventory_daily_snapshot, fact_inventory_daily_snapshot[dormant_days_since_last_movement] >= 90 || fact_inventory_daily_snapshot[days_of_inventory_on_hand] > 60))",
+            "formatString": "\\$#,0"
+          },
+          {
+            "name": "Inventory Turnover Ratio",
+            "expression": "VAR AnnualCOGS = SUM(fact_inventory_daily_snapshot[daily_actual_demand_qty]) * AVERAGE(fact_inventory_daily_snapshot[unit_cost]) * 365 RETURN DIVIDE(AnnualCOGS, [Total Inventory Value], 0)",
+            "formatString": "0.0"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "rel_plant",
+        "fromTable": "fact_inventory_daily_snapshot",
+        "fromColumn": "plant_id",
+        "toTable": "dim_plant",
+        "toColumn": "plant_id"
+      },
+      {
+        "name": "rel_sku",
+        "fromTable": "fact_inventory_daily_snapshot",
+        "fromColumn": "sku_id",
+        "toTable": "dim_product_sku",
+        "toColumn": "sku_id"
+      },
+      {
+        "name": "rel_supplier",
+        "fromTable": "fact_inventory_daily_snapshot",
+        "fromColumn": "supplier_id",
+        "toTable": "dim_supplier",
+        "toColumn": "supplier_id"
+      },
+      {
+        "name": "rel_date",
+        "fromTable": "fact_inventory_daily_snapshot",
+        "fromColumn": "date_key",
+        "toTable": "dim_date",
+        "toColumn": "date_key"
+      }
+    ]
+  }
+}

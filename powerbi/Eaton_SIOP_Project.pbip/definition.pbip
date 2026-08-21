@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "artifacts": [
+    {
+      "report": {
+        "path": "Eaton_SIOP.Report"
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": 0,
+  "resourcePackages": [],
+  "sections": [
+    {
+      "id": 0,
+      "name": "ReportSection_ExecSummary",
+      "displayName": "Executive SIOP & Inventory Scorecard",
+      "filters": "[]",
+      "ordinal": 0,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 20,
+          "z": 1000,
+          "width": 300,
+          "height": 140,
+          "config": "{\"name\": \"Card_TotalValue\", \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"fact_inventory_daily_snapshot.Total Inventory Value\"}]}}}"
+        },
+        {
+          "x": 340,
+          "y": 20,
+          "z": 1000,
+          "width": 300,
+          "height": 140,
+          "config": "{\"name\": \"Card_DOH\", \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"fact_inventory_daily_snapshot.Days of Inventory on Hand (DOH)\"}]}}}"
+        },
+        {
+          "x": 660,
+          "y": 20,
+          "z": 1000,
+          "width": 300,
+          "height": 140,
+          "config": "{\"name\": \"Card_EO\", \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"fact_inventory_daily_snapshot.Excess & Obsolete (E&O) Value\"}]}}}"
+        },
+        {
+          "x": 980,
+          "y": 20,
+          "z": 1000,
+          "width": 280,
+          "height": 140,
+          "config": "{\"name\": \"Card_Turns\", \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"fact_inventory_daily_snapshot.Inventory Turnover Ratio\"}]}}}"
+        },
+        {
+          "x": 20,
+          "y": 180,
+          "z": 2000,
+          "width": 750,
+          "height": 480,
+          "config": "{\"name\": \"Bar_PlantValuation\", \"singleVisual\": {\"visualType\": \"columnChart\", \"projections\": {\"Category\": [{\"queryRef\": \"dim_plant.plant_name\"}], \"Y\": [{\"queryRef\": \"fact_inventory_daily_snapshot.Total Inventory Value\"}]}}}"
+        },
+        {
+          "x": 790,
+          "y": 180,
+          "z": 2000,
+          "width": 470,
+          "height": 480,
+          "config": "{\"name\": \"Donut_CategoryValuation\", \"singleVisual\": {\"visualType\": \"donutChart\", \"projections\": {\"Category\": [{\"queryRef\": \"dim_product_sku.product_category\"}], \"Y\": [{\"queryRef\": \"fact_inventory_daily_snapshot.Total Inventory Value\"}]}}}"
+        }
+      ]
+    }
+  ],
+  "config": "{\"version\": \"5.50\", \"themeCollection\": {\"baseTheme\": {\"name\": \"CY24SU08\", \"version\": \"5.50\"}}}"
+}
